@@ -7,6 +7,8 @@ ARG PHP_ENABLE_XDEBUG=0
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+COPY image-files/ /
+
 RUN export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" &&\
     apt-get update && \
     apt-get -y install \
@@ -86,9 +88,6 @@ RUN chmod 700 \
 
 # Install composer plugins
 RUN composer global require --optimize-autoloader \
-        "hirak/prestissimo:${VERSION_PRESTISSIMO_PLUGIN}" && \
+        "hirak/prestissimo" && \
     composer global dumpautoload --optimize && \
     composer clear-cache
- 
-
-
