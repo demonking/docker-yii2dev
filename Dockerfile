@@ -6,15 +6,21 @@ ARG PHP_ROOT_DIR
 ARG PHP_ENABLE_XDEBUG=0
 
 ENV DEBIAN_FRONTEND=noninteractive
+#WORKAROUND TILL UPDATE
+
+RUN apt-get update -y && \
+    apt-get -y install gnupg2 --allow-unauthenticated
+RUN set -eux; \
+    \
+    for key in $GPG_KEYS; do \
+        gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
+    done; 
+# WORKAROUND END
 
 COPY image-files/ /
-
-RUN export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" &&\
-    apt-get update && \
-    apt-get -y install \
-    gnupg2 && \
-    apt-key update && \
-    apt-get -y install \
+RUN chmod 1777 /tmp
+RUN export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" 
+RUN apt-get -y install \
         libsqlite3-dev  \
         git \
         curl \
