@@ -82,15 +82,16 @@ ENV PHP_ENABLE_XDEBUG=${PHP_ENABLE_XDEBUG} \
     VERSION_PRESTISSIMO_PLUGIN=^0.3.7 \
     COMPOSER_ALLOW_SUPERUSER=1
 
+RUN chmod 700 \
+        /usr/local/bin/docker-php-entrypoint  \
+        /usr/local/bin/composer
+
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- \
         --filename=composer.phar \
         --install-dir=/usr/local/bin && \
     composer clear-cache
 
-RUN chmod 700 \
-        /usr/local/bin/docker-php-entrypoint  \
-        /usr/local/bin/composer
 
 # Install composer plugins
 RUN composer global require --optimize-autoloader \
